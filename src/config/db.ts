@@ -1,14 +1,15 @@
-import {Sequelize}from 'sequelize-typescript' 
+import { Sequelize } from 'sequelize-typescript'
 import dotenv from 'dotenv'
 import budgets from '../models/Budget';
 import Expense from '../models/Expense';
+import Users from '../models/User';
 
 dotenv.config()
 if (!process.env.DATABASE_URL) {
     console.log(process.env.DATABASE_URL)
     throw new Error('La variable DATABASE_URL no está definida en el archivo .env');
 }
-export const db = new Sequelize( process.env.DATABASE_URL, {
-    models: [budgets,Expense]
+export const db = new Sequelize(process.env.DATABASE_URL, {
+    models: [budgets, Expense, Users]
 
 })
