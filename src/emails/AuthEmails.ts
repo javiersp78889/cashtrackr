@@ -15,7 +15,7 @@ export class SendMessage {
             to: `${user.email}`, // Destinatario (cambia esta dirección)
             subject: 'Token de autenticación', // Asunto
             text: `No comparta con nadie`, // Cuerpo en texto plano
-            html: `<h5>Hola señor ${user.name}</h5><br/><b>TOKEN: ${user.token}</b>`, // Cuerpo en HTML (opcional)
+            html: `<h5>Hola señor ${user.name}, gracias por crear su cuenta en Cashtrackr</h5><br/><p>TOKEN: <b>${user.token}</b></p>`, // Cuerpo en HTML (opcional)
         };
         try {
             const info = await transporter.sendMail(mailOptions)
