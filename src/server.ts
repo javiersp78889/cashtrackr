@@ -20,7 +20,6 @@ async function connectDB() {
 connectDB()
 app.use(morgan('dev'))
 app.use(express.json())
-app.use(limit)
 app.use(express.urlencoded({ extended: true }))
 app.use('/api/budgets', bugetrouter)
 app.use('/api/auth', authRouter)

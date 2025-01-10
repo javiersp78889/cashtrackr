@@ -1,8 +1,10 @@
-import type { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import Users from "../models/User";
 import { Bcrypt } from "../utils/bcrypt";
 import { generateToken } from "../utils/Token";
 import { SendMessage } from "../emails/AuthEmails";
+import { jwtgenerate } from "../utils/jwt";
+
 
 
 export class authController {
@@ -39,6 +41,12 @@ export class authController {
 
     }
     static login = async (req: Request, res: Response) => {
-        res.json('Logueado')
+        const token = jwtgenerate(req.user.id)
+
+        res.json(token)
+    }
+
+    static passwordRecovery = async (req: Request, res: Response) => {
+
     }
 }

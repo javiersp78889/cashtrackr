@@ -5,13 +5,14 @@ import { handleInputErrors } from '../middleware/validation'
 import { userVerify } from '../middleware/authValidation'
 import { verificarLogueo } from '../middleware/UserVerify'
 import { Confirmado } from '../middleware/Confirmado'
+import { limit } from '../config/limiter'
 
 
 
 
 const router = Router()
 
-
+router.use(limit)
 router.post('/create-account',
     body('name').notEmpty().withMessage('El nombre no puede ir vacío'),
     body('password').notEmpty().withMessage('El password no puede ir vacío').isLength({ min: 8 }).withMessage('El password debe tener mínimo 8 caracteres'),
@@ -26,7 +27,6 @@ router.post('/login',
     handleInputErrors, verificarLogueo, Confirmado, authController.login)
 
 
-
-
-
+router.post('/forgot-password', body('email').notEmpty().withMessage('El Email no puede ir vacío').isEmail().withMessage('Email Incorrecto'), handleInputErrors,
+    authController.passwordRecovery)
 export default router
