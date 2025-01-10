@@ -47,6 +47,43 @@ export class authController {
     }
 
     static passwordRecovery = async (req: Request, res: Response) => {
+        const { email } = req.body
+        const find = await Users.findOne({ where: { email } })
+        if (find) {
+            find.token = generateToken()
+            await find.save()
+            await SendMessage.SendToken(find)
+            res.json({ message: 'Revisa tu email' })
+        }
 
+    }
+
+    static confirmToken = async (req: Request, res: Response) => {
+        const { token } = req.body
+
+        const usuario = await Users.findOne({ where: { token } })
+        if (!usuario) {
+            const error = new Error('Token no válido')
+            res.status(401).json({ error: error.message })
+        } else {
+
+            res.status(200).json('Cuenta Confirmada')
+        }
+    }
+
+    static resetPasswordWithToken = async (req: Request, res: Response) => {
+        const { token } = req.params
+        const { password } = req.body
+
+        const usuario = await Users.findOne({ where: { token } })
+
+        if (usuario) {
+            usuario.password = password
+            usuario.save()
+            res.status(200).json('Actualizado')
+        } else {
+            const error = new Error('Error al cambiar el password, por favor intentelo mas tarde')
+            res.status(500).json({ error: error.message })
+        }
     }
 }

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { authController } from '../controllers/authController'
-import { body } from 'express-validator'
+import { body, param } from 'express-validator'
 import { handleInputErrors } from '../middleware/validation'
 import { userVerify } from '../middleware/authValidation'
 import { verificarLogueo } from '../middleware/UserVerify'
@@ -29,4 +29,10 @@ router.post('/login',
 
 router.post('/forgot-password', body('email').notEmpty().withMessage('El Email no puede ir vacío').isEmail().withMessage('Email Incorrecto'), handleInputErrors,
     authController.passwordRecovery)
+
+
+router.post('/confirm-token', body('token').notEmpty().withMessage('Token Inválido').isLength({ min: 6, max: 6 }).withMessage('Token Inválido'), handleInputErrors, authController.confirmToken)
+
+router.post('/reset-password/:token', param('token').notEmpty().withMessage('Token Inválido').isLength({ min: 6, max: 6 }).withMessage('Token Inválido'), body('password').notEmpty().withMessage('El password no puede ir vacío'), handleInputErrors, authController.resetPasswordWithToken)
+
 export default router
