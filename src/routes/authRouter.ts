@@ -35,4 +35,5 @@ router.post('/confirm-token', body('token').notEmpty().withMessage('Token Invál
 
 router.post('/reset-password/:token', param('token').notEmpty().withMessage('Token Inválido').isLength({ min: 6, max: 6 }).withMessage('Token Inválido'), body('password').notEmpty().withMessage('El password no puede ir vacío'), handleInputErrors, authController.resetPasswordWithToken)
 
+router.get('/user', authController.getUser)
 export default router

@@ -1,10 +1,10 @@
-import { type Request, type Response } from "express";
+import { NextFunction, type Request, type Response } from "express";
 import Users from "../models/User";
 import { Bcrypt } from "../utils/bcrypt";
 import { generateToken } from "../utils/Token";
 import { SendMessage } from "../emails/AuthEmails";
 import { jwtgenerate } from "../utils/jwt";
-
+import jwt from 'jsonwebtoken'
 
 
 export class authController {
@@ -78,12 +78,39 @@ export class authController {
         const usuario = await Users.findOne({ where: { token } })
 
         if (usuario) {
-            usuario.password = password
-            usuario.save()
+            usuario.password = await Bcrypt(password)
+            usuario.token = null
+            await usuario.save()
             res.status(200).json('Actualizado')
         } else {
             const error = new Error('Error al cambiar el password, por favor intentelo mas tarde')
             res.status(500).json({ error: error.message })
         }
+    }
+    static getUser = async (req: Request, res: Response, next: NextFunction) => {
+        const bearer = req.headers.authorization
+
+        if (!bearer) {
+            const error = new Error('No autorizado')
+            res.status(401).json({ error: error.message })
+        }
+        else {
+
+            const [, token] = bearer.split(' ')
+
+            if (!token) {
+                const error = new Error('No autorizado')
+                res.status(401).json({ error: error.message })
+            }
+
+            try {
+                const decoded = jwt.verify(token, process.env.SECRETO)
+                res.json(decoded)
+            } catch (error) {
+                res.status(500).json({ error: 'Token no valido' })
+
+            }
+        }
+
     }
 }
