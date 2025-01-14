@@ -6,6 +6,7 @@ import { userVerify } from '../middleware/authValidation'
 import { verificarLogueo } from '../middleware/UserVerify'
 import { Confirmado } from '../middleware/Confirmado'
 import { limit } from '../config/limiter'
+import { autenticate } from '../middleware/autenticate'
 
 
 
@@ -35,5 +36,10 @@ router.post('/confirm-token', body('token').notEmpty().withMessage('Token Invál
 
 router.post('/reset-password/:token', param('token').notEmpty().withMessage('Token Inválido').isLength({ min: 6, max: 6 }).withMessage('Token Inválido'), body('password').notEmpty().withMessage('El password no puede ir vacío'), handleInputErrors, authController.resetPasswordWithToken)
 
-router.get('/user', authController.getUser)
+router.get('/user', autenticate, authController.getUser)
+
+router.post('/update-password', body('password').notEmpty().withMessage('El password no puede ir vacío').isLength({ min: 8 }).withMessage('El password debe tener mínimo 8 caracteres'), handleInputErrors, autenticate, authController.updateCurrentUserPassword)
+
+
+
 export default router

@@ -1,10 +1,10 @@
 import { NextFunction, type Request, type Response } from "express";
 import Users from "../models/User";
-import { Bcrypt } from "../utils/bcrypt";
+import { Bcrypt, passwordVerify } from "../utils/bcrypt";
 import { generateToken } from "../utils/Token";
 import { SendMessage } from "../emails/AuthEmails";
 import { jwtgenerate } from "../utils/jwt";
-import jwt from 'jsonwebtoken'
+
 
 
 export class authController {
@@ -88,28 +88,30 @@ export class authController {
         }
     }
     static getUser = async (req: Request, res: Response, next: NextFunction) => {
-        const bearer = req.headers.authorization
+        res.json(req.usuarios)
 
-        if (!bearer) {
-            const error = new Error('No autorizado')
-            res.status(401).json({ error: error.message })
-        }
-        else {
-
-            const [, token] = bearer.split(' ')
-
-            if (!token) {
-                const error = new Error('No autorizado')
-                res.status(401).json({ error: error.message })
+    }
+    static updateCurrentUserPassword = async (req: Request, res: Response, next: NextFunction) => {
+        const { name } = req.usuarios
+        const { password, current_password } = req.body
+        const user = await Users.findOne({ where: { name } })
+        const pwd = await passwordVerify(current_password, user.password)
+        console.log(pwd)
+        if (pwd) {
+            const pass = await passwordVerify(password, user.password)
+            if (pass) {
+                res.status(401).json({ mensaje: 'El password nuevo no puede ser igual al anterior' })
+            } else {
+                user.password = password
+                user.save()
+                res.status(201).json({ msg: 'Password Actualizado' })
             }
 
-            try {
-                const decoded = jwt.verify(token, process.env.SECRETO)
-                res.json(decoded)
-            } catch (error) {
-                res.status(500).json({ error: 'Token no valido' })
+        } else {
 
-            }
+
+            res.status(401).json({ mensaje: 'Para cambiar su password debe introducir su actual primero' })
+
         }
 
     }
