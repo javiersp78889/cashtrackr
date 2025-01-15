@@ -66,7 +66,9 @@ export class authController {
             const error = new Error('Token no válido')
             res.status(401).json({ error: error.message })
         } else {
-
+            usuario.token= null
+            usuario.confirmed = true
+            await usuario.save()
             res.status(200).json('Cuenta Confirmada')
         }
     }
@@ -92,9 +94,9 @@ export class authController {
 
     }
     static updateCurrentUserPassword = async (req: Request, res: Response, next: NextFunction) => {
-        const { name } = req.usuarios
+        const { id } = req.usuarios
         const { password, current_password } = req.body
-        const user = await Users.findOne({ where: { name } })
+        const user = await Users.findByPk(id)
         const pwd = await passwordVerify(current_password, user.password)
         console.log(pwd)
         if (pwd) {
@@ -102,7 +104,7 @@ export class authController {
             if (pass) {
                 res.status(401).json({ mensaje: 'El password nuevo no puede ser igual al anterior' })
             } else {
-                user.password = password
+                user.password = await Bcrypt(password)
                 user.save()
                 res.status(201).json({ msg: 'Password Actualizado' })
             }
@@ -113,6 +115,8 @@ export class authController {
             res.status(401).json({ mensaje: 'Para cambiar su password debe introducir su actual primero' })
 
         }
-
     }
+
+  
+
 }

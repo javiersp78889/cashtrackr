@@ -7,6 +7,7 @@ import { verificarLogueo } from '../middleware/UserVerify'
 import { Confirmado } from '../middleware/Confirmado'
 import { limit } from '../config/limiter'
 import { autenticate } from '../middleware/autenticate'
+import { checkPassword } from '../utils/checkpassword'
 
 
 
@@ -38,7 +39,9 @@ router.post('/reset-password/:token', param('token').notEmpty().withMessage('Tok
 
 router.get('/user', autenticate, authController.getUser)
 
-router.post('/update-password', body('password').notEmpty().withMessage('El password no puede ir vacío').isLength({ min: 8 }).withMessage('El password debe tener mínimo 8 caracteres'), handleInputErrors, autenticate, authController.updateCurrentUserPassword)
+router.post('/update-password', body('current_password').notEmpty().withMessage('El password no puede ir vacío'), body('password').notEmpty().withMessage('El password no puede ir vacío').isLength({ min: 8 }).withMessage('El password debe tener mínimo 8 caracteres'), handleInputErrors, autenticate, authController.updateCurrentUserPassword)
+
+router.post('/check-password', body('password').notEmpty().withMessage('El password no puede ir vacío'), handleInputErrors, autenticate, checkPassword)
 
 
 
