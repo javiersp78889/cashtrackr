@@ -6,9 +6,11 @@ import { bodyValidations, paramValidations } from '../middleware/ExpressValidato
 import Expense from '../models/Expense'
 import { ExpensesController } from '../controllers/ExpenseController'
 import { ExpenseValidations } from '../middleware/Expense'
+import { autenticate } from '../middleware/autenticate'
 
 
 const router = Router()
+router.use(autenticate)
 
 router.param('budgetId', paramValidations)
 router.param('budgetId', findbyId)
