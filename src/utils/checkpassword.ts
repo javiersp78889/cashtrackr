@@ -9,7 +9,7 @@ export const checkPassword = async (req: Request, res: Response, next: NextFunct
     if(user){
         res.status(201).json("Autorizado")
     }else{
-        res.status(501).json("Ups, parece que ese no era tu password")
+        res.status(401).json("Ups, parece que ese no era tu password")
     }
     
 

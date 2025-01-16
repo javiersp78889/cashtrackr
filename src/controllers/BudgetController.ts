@@ -4,8 +4,10 @@ import Expense from '../models/Expense'
 
 export class BudgetController {
     static getAll = async (req: Request, res: Response) => {
+        const { id } = req.usuarios
         try {
             const budget = await budgets.findAll({
+                where: { userId: id },
                 order: [['createdAt', 'DESC']]
             })
             res.status(200).json(budget)
@@ -17,18 +19,21 @@ export class BudgetController {
     static create = async (req: Request, res: Response) => {
         try {
             const budget = new budgets(req.body)
+            budget.userId = req.usuarios.id
+            console.log(budget)
             await budget.save()
             res.status(201).json({ mensaje: 'creado', budget })
         } catch (error) {
-            res.status(500).json({ error: 'Hubo un error' })
+            res.status(500).json({ error: error })
         }
 
     }
 
     static getById = async (req: Request, res: Response) => {
-        const budget = await budgets.findByPk(req.budget.id, {
-            include: [Expense]
-        })
+        
+            const budget = await budgets.findByPk(req.budget.id, {
+                include: [Expense]
+            })
         res.status(202).json(budget)
 
     }

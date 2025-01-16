@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { BudgetController } from '../controllers/BudgetController'
 import { handleInputErrors } from '../middleware/validation'
-import { findbyId, findExpensebyId } from '../middleware/findById'
+import { findbyId, findExpensebyId, hasAccess, hasExpenseAcess } from '../middleware/findById'
 import { bodyValidations, paramValidations } from '../middleware/ExpressValidator'
 import Expense from '../models/Expense'
 import { ExpensesController } from '../controllers/ExpenseController'
@@ -10,14 +10,16 @@ import { autenticate } from '../middleware/autenticate'
 
 
 const router = Router()
-router.use(autenticate)
+router.use(autenticate) // req.usuarios
 
 router.param('budgetId', paramValidations)
-router.param('budgetId', findbyId)
+router.param('budgetId', findbyId)  // req.budget
+router.param('budgetId', hasAccess)
 
 /**Gastos params */
 router.param('expenseId', findbyId)
 router.param('expenseId', findExpensebyId)
+router.param('expenseId', hasExpenseAcess)
 
 router.get('/', BudgetController.getAll)
 router.post('/', bodyValidations, handleInputErrors, BudgetController.create)
