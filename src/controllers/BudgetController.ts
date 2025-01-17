@@ -4,7 +4,9 @@ import Expense from '../models/Expense'
 
 export class BudgetController {
     static getAll = async (req: Request, res: Response) => {
+        
         const { id } = req.usuarios
+        console.log(id)
         try {
             const budget = await budgets.findAll({
                 where: { userId: id },
