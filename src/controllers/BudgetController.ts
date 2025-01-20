@@ -20,13 +20,13 @@ export class BudgetController {
     }
     static create = async (req: Request, res: Response) => {
         try {
-            const budget = new budgets(req.body)
+            const budget = await budgets.create(req.body)
             budget.userId = req.usuarios.id
             console.log(budget)
             await budget.save()
             res.status(201).json({ mensaje: 'creado', budget })
         } catch (error) {
-            res.status(500).json({ error: error })
+            res.status(500).json({ error: 'Hubo un error' })
         }
 
     }
