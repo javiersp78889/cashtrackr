@@ -43,7 +43,7 @@ export class BudgetController {
     static editById = async (req: Request, res: Response) => {
         try {
             await req.budget.update(req.body)
-            res.status(200).json({ mensaje: 'Presupuesto Actualizado' })
+            res.status(200).json('Presupuesto Actualizado' )
         } catch (error) {
             res.status(500).json({ error: error })
         }
@@ -53,7 +53,7 @@ export class BudgetController {
         try {
 
             await req.budget.destroy()
-            res.status(200).json({ mensaje: 'Presupuesto Eliminado' })
+            res.status(200).json('Presupuesto Eliminado')
         } catch (error) {
             const errors = new Error('Error al eliminar el presupuesto')
             res.status(500).json({ error: errors.message })
