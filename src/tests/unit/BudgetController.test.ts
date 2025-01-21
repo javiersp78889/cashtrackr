@@ -5,7 +5,8 @@ import { budget } from "../mocks/budgets"
 
 jest.mock('../../models/Budget', () => ({
     findAll: jest.fn(),
-    create: jest.fn()
+    create: jest.fn(),
+    findByPk: jest.fn()
 }))
 
 describe('BudgetController.getAll', () => {
@@ -106,5 +107,32 @@ describe('BudgetController.create', () => {
         expect(budgets.create).toHaveBeenCalledWith(req.body)
 
 
+    })
+})
+
+describe('BudgetController getById', () => {
+    beforeEach(() => {
+        (budgets.findByPk as jest.Mock).mockImplementation(id => {
+            const filter = budget.filter(n => n.id === id)[0];
+            return Promise.resolve(filter)
+        })
+    })
+    it('Should return a budget with ID 1 and 3 expenses', async () => {
+        const req = createRequest({
+            method: 'POST',
+            url: '/api/budgets',
+            budget: { id: 1 }
+        })
+
+        const res = createResponse();
+        await BudgetController.getById(req, res)
+        const data = res._getJSONData()
+        expect(res.statusCode).toBe(202)
+        expect(data.expenses).toHaveLength(3)
+        expect(budgets.findByPk).toHaveBeenCalled()
+        expect(budgets.findByPk).toHaveBeenCalledTimes(1)
+        expect(budgets.findByPk).toHaveBeenCalledWith(req.budget.id)
+
+        
     })
 })
