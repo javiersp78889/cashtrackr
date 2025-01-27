@@ -16,10 +16,10 @@ export class authController {
             user.token = generateToken()
             await user.save()
             await SendMessage.SendToken(user)
-            res.status(201).json(user)
+            res.status(201).json('Cuenta Creada')
 
         } catch (error) {
-            res.status(500).json({ error: 'Hubo un error' })
+            res.status(409).json({ error: 'Hubo un error' })
         }
 
     }
