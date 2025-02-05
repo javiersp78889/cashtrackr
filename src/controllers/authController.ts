@@ -53,7 +53,9 @@ export class authController {
             find.token = generateToken()
             await find.save()
             await SendMessage.SendToken(find)
-            res.json({ message: 'Revisa tu email' })
+            res.json('Revisa tu email')
+        } else {
+            res.status(401).json('Usuario no Encontrado')
         }
 
     }
@@ -66,7 +68,7 @@ export class authController {
             const error = new Error('Token no válido')
             res.status(401).json({ error: error.message })
         } else {
-            usuario.token= null
+            usuario.token = null
             usuario.confirmed = true
             await usuario.save()
             res.status(200).json('Cuenta Confirmada')
@@ -117,6 +119,6 @@ export class authController {
         }
     }
 
-  
+
 
 }
