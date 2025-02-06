@@ -53,7 +53,7 @@ export class authController {
             find.token = generateToken()
             await find.save()
             await SendMessage.SendToken(find)
-            res.json({ message: 'Revisa tu email' })
+            res.json('Revisa tu email')
         }
 
     }
@@ -64,12 +64,10 @@ export class authController {
         const usuario = await Users.findOne({ where: { token } })
         if (!usuario) {
             const error = new Error('Token no válido')
-            res.status(401).json({ error: error.message })
+            res.status(401).json(error.message)
         } else {
-            usuario.token= null
-            usuario.confirmed = true
-            await usuario.save()
-            res.status(200).json('Cuenta Confirmada')
+    
+            res.status(200).json('Autorizado')
         }
     }
 
@@ -86,7 +84,7 @@ export class authController {
             res.status(200).json('Actualizado')
         } else {
             const error = new Error('Error al cambiar el password, por favor intentelo mas tarde')
-            res.status(500).json({ error: error.message })
+            res.status(500).json(error.message)
         }
     }
     static getUser = async (req: Request, res: Response, next: NextFunction) => {

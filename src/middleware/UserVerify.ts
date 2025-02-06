@@ -12,8 +12,6 @@ declare global {
 export const verificarLogueo = async (req: Request, res: Response, next: NextFunction) => {
 
     const { email, password } = req.body
-    console.log(req.body)
-
     const usuario = await Users.findOne({ where: { email } })
 
     if (usuario) {
