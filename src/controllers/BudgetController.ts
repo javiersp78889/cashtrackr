@@ -24,9 +24,9 @@ export class BudgetController {
             budget.userId = req.usuarios.id
             console.log(budget)
             await budget.save()
-            res.status(201).json({ mensaje: 'creado', budget })
+            res.status(201).json('Presupuesto Creado')
         } catch (error) {
-            res.status(500).json({ error: 'Hubo un error' })
+            res.status(500).json('Hubo un error')
         }
 
     }

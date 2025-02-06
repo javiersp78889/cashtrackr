@@ -14,7 +14,7 @@ import { checkPassword } from '../utils/checkpassword'
 
 const router = Router()
 
-router.use(limit)
+//router.use(limit)
 router.post('/create-account',
     body('name').notEmpty().withMessage('El nombre no puede ir vacío'),
     body('password').notEmpty().withMessage('El password no puede ir vacío').isLength({ min: 8 }).withMessage('El password debe tener mínimo 8 caracteres'),
