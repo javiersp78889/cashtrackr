@@ -45,7 +45,7 @@ export class BudgetController {
             await req.budget.update(req.body)
             res.status(200).json('Presupuesto Actualizado' )
         } catch (error) {
-            res.status(500).json({ error: error })
+            res.status(500).json('Error al actualizar presupuesto')
         }
 
     }
