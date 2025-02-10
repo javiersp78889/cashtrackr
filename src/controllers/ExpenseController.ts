@@ -8,9 +8,9 @@ export class ExpensesController {
             const expense = new Expense(req.body)
             expense.budgetId = req.budget.id
             await expense.save()
-            res.status(201).json({ message: 'Gasto Creado' })
+            res.status(201).json('Gasto Creado')
         } catch (error) {
-            res.status(500).json({ error: 'Hubo un error' })
+            res.status(500).json('Hubo un error')
         }
     }
 
