@@ -25,6 +25,15 @@ export class ExpensesController {
     }
 
     static deleteById = async (req: Request, res: Response) => {
-        await req.expense.destroy()
+        try {
+            await req.expense.destroy()
+
+            res.status(200).json('Gasto Eliminado')
+
+        } catch (error) {
+
+            res.status(500).json('Ha ocurrido un error')
+
+        }
     }
 }
