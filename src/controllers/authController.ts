@@ -96,15 +96,15 @@ export class authController {
         const { password, current_password } = req.body
         const user = await Users.findByPk(id)
         const pwd = await passwordVerify(current_password, user.password)
-        console.log(pwd)
+        console.log(current_password, user.password)
         if (pwd) {
             const pass = await passwordVerify(password, user.password)
             if (pass) {
-                res.status(401).json({ mensaje: 'El password nuevo no puede ser igual al anterior' })
+                res.status(401).json('El password nuevo no puede ser igual al anterior')
             } else {
                 user.password = await Bcrypt(password)
                 user.save()
-                res.status(201).json({ msg: 'Password Actualizado' })
+                res.status(201).json('Password Actualizado')
             }
 
         } else {

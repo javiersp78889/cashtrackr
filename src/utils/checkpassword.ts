@@ -6,6 +6,8 @@ export const checkPassword = async (req: Request, res: Response, next: NextFunct
 
     const usuario = await Users.findByPk(req.usuarios.id)
     const user = await passwordVerify(req.body.password, usuario.password)
+
+    console.log(req.body.password, usuario.password)
     if(user){
         res.status(201).json("Autorizado")
     }else{
