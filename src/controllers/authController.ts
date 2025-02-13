@@ -66,7 +66,7 @@ export class authController {
             const error = new Error('Token no válido')
             res.status(401).json(error.message)
         } else {
-    
+
             res.status(200).json('Autorizado')
         }
     }
@@ -89,6 +89,23 @@ export class authController {
     }
     static getUser = async (req: Request, res: Response, next: NextFunction) => {
         res.json(req.usuarios)
+
+    }
+    static updateUser = async (req: Request, res: Response, next: NextFunction) => {
+        const { id } = req.usuarios
+        const { name, email } = req.body
+
+        const user = await Users.findByPk(id)
+
+        if (!user) {
+
+            res.status(404).json('Este usuario no existe')
+        } else {
+            user.email = email
+            user.name = name
+            user.save()
+            res.status(201).json('Datos Actualizados')
+        }
 
     }
     static updateCurrentUserPassword = async (req: Request, res: Response, next: NextFunction) => {
@@ -115,6 +132,6 @@ export class authController {
         }
     }
 
-  
+
 
 }

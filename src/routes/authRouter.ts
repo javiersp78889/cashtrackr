@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { authController } from '../controllers/authController'
 import { body, param } from 'express-validator'
 import { handleInputErrors } from '../middleware/validation'
-import { userVerify } from '../middleware/authValidation'
+import { userProfileEmailVerify, userProfileVerify, userVerify } from '../middleware/authValidation'
 import { verificarLogueo } from '../middleware/UserVerify'
 import { Confirmado } from '../middleware/Confirmado'
 import { limit } from '../config/limiter'
@@ -38,6 +38,9 @@ router.post('/confirm-token', body('token').notEmpty().withMessage('Token Invál
 router.post('/reset-password/:token', param('token').notEmpty().withMessage('Token Inválido').isLength({ min: 6, max: 6 }).withMessage('Token Inválido'), body('password').notEmpty().withMessage('El password no puede ir vacío'), handleInputErrors, authController.resetPasswordWithToken)
 
 router.get('/user', autenticate, authController.getUser)
+
+router.put('/user', body('name').notEmpty().withMessage('El nombre no puede ir vacío'), body('email').notEmpty().withMessage('El Email no puede ir vacío').isEmail().withMessage('Email Incorrecto'), handleInputErrors, autenticate, userProfileVerify, userProfileEmailVerify, authController.updateUser)
+
 
 router.post('/update-password', body('current_password').notEmpty().withMessage('El password no puede ir vacío'), body('password').notEmpty().withMessage('El password no puede ir vacío').isLength({ min: 8 }).withMessage('El password debe tener mínimo 8 caracteres'), handleInputErrors, autenticate, authController.updateCurrentUserPassword)
 
