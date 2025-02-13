@@ -61,3 +61,11 @@ export const hasExpenseAcess = async (req: Request, res: Response, next: NextFun
 
     }
 }
+export const belongToBudgets = async (req: Request, res: Response, next: NextFunction) => {
+    if (req.budget.id !== req.expense.budgetId) {
+        res.status(401).json('No esta autorizado')
+    } else {
+        next()
+    }
+}
+
