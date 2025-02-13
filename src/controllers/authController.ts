@@ -100,7 +100,7 @@ export class authController {
         if (pwd) {
             const pass = await passwordVerify(password, user.password)
             if (pass) {
-                res.status(401).json('El password nuevo no puede ser igual al anterior')
+                res.status(401).json('El password nuevo no puede ser igual al anterior.')
             } else {
                 user.password = await Bcrypt(password)
                 user.save()
